@@ -4,6 +4,7 @@
     Author     : Morales
 --%>
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.AbstractList"%>
 <%@page import="com.calculadora.classes.DbHelper"%>
 <%@page import="java.util.ArrayList"%>
@@ -45,12 +46,12 @@
             <tbody>
                 <%  
                     List<Person> sheeple = new ArrayList<Person>();
+                    String key = "_p";
                     try{
                         DbHelper dbHelper = new DbHelper();
                         sheeple = dbHelper.getAllSheeple();
-
                         for(Person person : sheeple) {
-                            out.println("<tr><td><h4>"+person.getName()+"</h4></td></tr>");//aqui falta lo del anchor
+                            out.println("<tr style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#"+person.getID()+key+"\" ><td><h4>"+person.getName()+"</h4></td></tr>");//aqui falta lo del anchor
                         }
                         dbHelper.endConnection();
                     }
@@ -60,7 +61,69 @@
                 %>
             </tbody>
         </table>
-            <% //aqui %>
+            <% 
+                for(Person person : sheeple) {
+                    out.println(
+                    "<div id=\""+person.getID()+key+"\" class=\"modal fade\" role=\"dialog\">" +
+                    "<div class=\"modal-dialog\">" +
+
+                      "<!-- Modal content-->"+
+                      "<div class=\"modal-content\">" +
+                        "<div class=\"modal-header\">" +
+                          "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>" +
+                          "<h4 class=\"modal-title\">"+person.getName()+"</h4>" +
+                        "</div>" +
+                        "<div class=\"modal-body\">"+
+                        "<table class=\"table table-bordered\">" +
+                            "<tbody>" +
+                                "<tr>" +
+                                    "<td>Cumpleaños</td>" +
+                                    "<td>" +
+                                        person.getBirthday() +
+                                    "</td>" +
+                                "</tr>"+
+                                "<tr>" +
+                                    "<td>Fecha fin" +
+                                    "<td>" +
+                                        person.getBio().getFinal_daystr() +
+                                    "</td>" +
+                                "</tr>"+
+                                "<tr>" +
+                                    "<td>Dias vividos a la fecha de calculo</td>" +
+                                    "<td>" +
+                                        person.getBio().getDays() +
+                                    "</td>" +
+                                "</tr>"+
+                                "<tr>"+
+                                    "<td>Dias del Ciclo fisico (23)</td>" +
+                                    "<td style=\"background: "+person.getBio().getPhysicalColor()+"\">" +
+                                        person.getBio().getPhysicalCycle() +
+                                    "</td>" +
+                                "</tr>" +
+                                "<tr>" +
+                                    "<td>Dias del Ciclo Emocional (28)</td>" +
+                                    "<td style=\"background: "+person.getBio().getEmotionalColor()+"\">" +                        
+                                        person.getBio().getEmotionalCycle() +
+                                    "</td>" +
+                                "</tr>" +
+                                "<tr>" +
+                                    "<td>Dias del Ciclo Intelectual (33)</td>"+
+                                    "<td style=\"background: "+person.getBio().getIntelectualColor()+"\">" +
+                                        person.getBio().getIntelectualCycle() +
+                                    "</td>" +
+                                "</tr>" +
+                            "</tbody>" +
+                        "</table>" +
+                       " </div>" +
+                        "<div class=\"modal-footer\">" +
+                          "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>" +
+                        "</div>" +
+                      "</div>" +
+                    "</div>" +
+                    "</div>"
+                    );
+                }
+            %>
     </div>
     <div class="col-sm-2 sidenav">
     </div>

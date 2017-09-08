@@ -52,7 +52,10 @@ public class Request extends HttpServlet {
             if(name.equals("") || name == ""){
                 request.getRequestDispatcher("Calculadora.jsp?message=3").forward(request, response);
                 return;
-            }            
+            } 
+            DbHelper dbHelper = new DbHelper();
+            dbHelper.insertPerson(name, birthday, final_day);
+            dbHelper.endConnection();
             request.getRequestDispatcher("Calculadora.jsp?message=0").forward(request, response);
         } catch (Exception ex) {
             out.println("<!DOCTYPE html>");

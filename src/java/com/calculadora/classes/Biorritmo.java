@@ -14,19 +14,25 @@ import java.util.Date;
 public class Biorritmo {
 
     final DateFormat Format = new SimpleDateFormat("dd/MM/yyyy");
-    Date birthday;
-    Date final_day;
+    private Date birthday;
+    private Date final_day;
+    private String final_daystr;
     
     public Biorritmo(String birthday, String final_day){
         try{
             this.birthday = Format.parse(birthday);
             this.final_day = Format.parse(final_day);
+            this.final_daystr = final_day;
         }
         catch(Exception e){
             System.out.println("No se pudo hacer esta madre.");
             birthday = null;
             final_day = null;
         }
+    }
+    
+    public String getFinal_daystr() {
+        return final_daystr;
     }
     
     public int getDays(){
