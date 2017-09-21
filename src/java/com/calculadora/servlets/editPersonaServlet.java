@@ -5,12 +5,11 @@
  */
 package com.calculadora.servlets;
 
+import com.calculadora.classes.Person;
 import com.calculadora.classes.Biorritmo;
 import com.calculadora.classes.DbHelper;
-import com.calculadora.classes.Person;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Morales
  */
-public class Request extends HttpServlet {
+public class editPersonaServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,6 +41,7 @@ public class Request extends HttpServlet {
             String final_day = request.getParameter("final_day");
             String name = request.getParameter("name");
             String email = request.getParameter("email");
+            int id = Integer.parseInt(request.getParameter("id"));
             if(birthday.equals("") || final_day.equals("")){ 
                 request.getRequestDispatcher("Calculadora.jsp?message=1").forward(request, response);
                 return;
@@ -59,13 +59,8 @@ public class Request extends HttpServlet {
                 request.getRequestDispatcher("Calculadora.jsp?message=4").forward(request, response);
                 return;
             } 
-            /*
-                NOTA
-                Cuenta continuia en deletePersonaServlet
-            */
-            Person p = new Person(-1, name, email, birthday, new Biorritmo(birthday, final_day));
             DbHelper dbHelper = new DbHelper();
-            dbHelper.insertPerson(name, email, birthday, final_day);
+            Person p = dbHelper.updatePersonById(id, name, email, birthday, final_day);
             p.sendEmail();
             dbHelper.endConnection();
             request.getRequestDispatcher("Calculadora.jsp?message=6&email="+email).forward(request, response);

@@ -5,6 +5,9 @@
  */
 package com.calculadora.classes;
 
+import java.io.UnsupportedEncodingException;
+import javax.mail.MessagingException;
+
 /**
  *
  * @author Morales
@@ -13,16 +16,33 @@ public class Person {
     
     private int ID;
     private String Name;
+    private String Email;
     private String Birthday;
     private Biorritmo Bio;
     
-    public Person(int ID, String Name, String Birthday, Biorritmo Bio) {
+    public Person(){}
+    
+    public Person(int ID, String Name, String Email, String Birthday, Biorritmo Bio) {
         this.ID = ID;
         this.Name = Name;
         this.Birthday = Birthday;
         this.Bio = Bio;
+        this.Email = Email;
+    }
+     
+    public void sendEmail() throws MessagingException, UnsupportedEncodingException{
+        Email email = new Email(this);
+        email.send();
+    }
+    
+    public String getEmail() {
+        return Email;
     }
 
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+    
     public int getID() {
         return ID;
     }

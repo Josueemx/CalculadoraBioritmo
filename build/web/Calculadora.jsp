@@ -28,6 +28,10 @@
                 <label for="usr">Nombre</label>
                 <input type="text" class="form-control" name="name" title="haz click para editar el nombre" placeholder="nombre">
             </div>
+            <div class="form-group">
+                <label for="usr">Correo</label>
+                <input type="text" class="form-control" name="email" title="haz click para editar el correo electrónico" placeholder="correo">
+            </div>
             <div class="form-group">                
                 <div class="input-group input-daterange">
                     <div class="input-group-addon">de</div>
@@ -47,11 +51,12 @@
                 <%  
                     List<Person> sheeple = new ArrayList<Person>();
                     String key = "_p";
+                    String key2 = "_p2";
                     try{
                         DbHelper dbHelper = new DbHelper();
                         sheeple = dbHelper.getAllSheeple();
                         for(Person person : sheeple) {
-                            out.println("<tr style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#"+person.getID()+key+"\" ><td><h4>"+person.getName()+"</h4></td></tr>");//aqui falta lo del anchor
+                            out.println("<tr style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#"+person.getID()+key+"\" ><td><h4>"+person.getName()+"</h4></td></tr>");
                         }
                         dbHelper.endConnection();
                     }
@@ -64,6 +69,7 @@
             <% 
                 for(Person person : sheeple) {
                     out.println(
+                    //modal 1
                     "<div id=\""+person.getID()+key+"\" class=\"modal fade\" role=\"dialog\">" +
                     "<div class=\"modal-dialog\">" +
 
@@ -76,6 +82,12 @@
                         "<div class=\"modal-body\">"+
                         "<table class=\"table table-bordered\">" +
                             "<tbody>" +
+                                "<tr>" +
+                                    "<td>Correo</td>" +
+                                    "<td>" +
+                                        person.getEmail() +
+                                    "</td>" +
+                                "</tr>"+
                                 "<tr>" +
                                     "<td>Cumpleaños</td>" +
                                     "<td>" +
@@ -116,8 +128,46 @@
                         "</table>" +
                        " </div>" +
                         "<div class=\"modal-footer\">" +
-                          "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>" +
+                            "<a type=\"button\" class=\"btn btn-info\" data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#"+person.getID()+key2+"\">Editar</a>" +
+                            "<a type=\"button\" href=\"deletePersonaServlet?id="+person.getID()+"\" class=\"btn btn-danger\">Eliminar</a>" +
                         "</div>" +
+                      "</div>" +
+                    "</div>" +
+                    "</div>"+
+                            
+                    //modal 2
+                    "<div id=\""+person.getID()+key2+"\" class=\"modal fade\" role=\"dialog\">" +
+                    "<div class=\"modal-dialog\">" +
+                      "<div class=\"modal-content\">" +
+                        "<form action=\"editPersonaServlet\" method=\"post\">"+
+                        "<div class=\"modal-header\">" +
+                          "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>" +
+                          "<h4 class=\"modal-title\">"+person.getName()+"</h4>" +
+                        "</div>" +
+                        "<div class=\"modal-body\">"+
+                            "<div class=\"form-group\">"+
+                                "<input type=\"hidden\" name=\"id\" value=\""+person.getID()+"\">" +
+                                "<label for=\"usr\">Nombre</label>"+
+                                "<input type=\"text\" class=\"form-control\" name=\"name\" title=\"haz click para editar el nombre\" placeholder=\"nombre\" value=\""+person.getName()+"\">" +
+                            "</div>" +
+                            "<div class=\"form-group\">" +
+                                "<label for=\"usr\">Correo</label>" +
+                                "<input type=\"text\" class=\"form-control\" name=\"email\" title=\"haz click para editar el correo electrónico\" placeholder=\"correo\" value=\""+person.getEmail()+"\">" +
+                            "</div>" +
+                            "<div class=\"form-group\">" +                
+                                "<div class=\"input-group input-daterange\">" +
+                                    "<div class=\"input-group-addon\">de</div>" +
+                                    "<input type=\"text\" class=\"form-control\" title=\"haz click para editar fecha de nacimiento\" placeholder=\"dia de nacimiento\" readonly=\"true\" name=\"birthday\" value=\""+person.getBirthday()+"\">" +
+                                    "<div class=\"input-group-addon\">hasta</div>" +
+                                    "<input type=\"text\" class=\"form-control\" title=\"haz click para editar fecha final\" readonly=\"true\" name=\"final_day\" id=\"final_day\" value=\""+person.getBio().getFinal_daystr()+"\">" +
+                                "</div>" +
+                            "</div>" +
+                            //falta boton aqui o en el footer
+                       " </div>" +
+                        "<div class=\"modal-footer\">" +
+                            "<button type=\"submit\" class=\"btn btn-primary\">Actualizar</button>" +
+                        "</div>" +
+                        "</form>"+
                       "</div>" +
                     "</div>" +
                     "</div>"
@@ -145,22 +195,29 @@
     });
 </script> 
 
+<script type="text/javascript" async>
 <c:choose>
-    <c:when test="${param.message == 1}">
-        <script type="text/javascript">
+        <c:when test="${param.message == 1}">
             alert("Los datos introducidos no son validos.");
-        </script>
-    </c:when>
-    <c:when test="${param.message == 2}">
-        <script type="text/javascript">
+        </c:when>
+        <c:when test="${param.message == 2}">
             alert("La fecha final no puede ser mayor o igual que la primera.");
-        </script>
-    </c:when>
-    <c:when test="${param.message == 3}">
-        <script type="text/javascript">
+        </c:when>
+        <c:when test="${param.message == 3}">
             alert("El nombre no puede estar vacio.");
-        </script>
-    </c:when>
+        </c:when>
+        <c:when test="${param.message == 4}">
+            alert("El correo no puede estar vacio.");
+        </c:when>
+        <c:when test="${param.message == 5}">
+            alert("Se eliminó \"${param.name}\" correctamente.");
+        </c:when>
+        <c:when test="${param.message == 6}">
+            alert("Se envió un correo a \"${param.email}\" con los resultados.");
+        </c:when>
 </c:choose>
+</script>
+    
+
         
 <%@ include file = "footer.jsp"%>

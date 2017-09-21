@@ -4,9 +4,25 @@
         <servlet-name>Request</servlet-name>
         <servlet-class>com.calculadora.servlets.Request</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>editPersonaServlet</servlet-name>
+        <servlet-class>com.calculadora.servlets.editPersonaServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deletePersonaServlet</servlet-name>
+        <servlet-class>com.calculadora.servlets.deletePersonaServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Request</servlet-name>
         <url-pattern>/Request</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editPersonaServlet</servlet-name>
+        <url-pattern>/editPersonaServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deletePersonaServlet</servlet-name>
+        <url-pattern>/deletePersonaServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

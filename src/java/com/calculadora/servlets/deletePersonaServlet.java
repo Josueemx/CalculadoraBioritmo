@@ -5,9 +5,7 @@
  */
 package com.calculadora.servlets;
 
-import com.calculadora.classes.Biorritmo;
 import com.calculadora.classes.DbHelper;
-import com.calculadora.classes.Person;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -22,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Morales
  */
-public class Request extends HttpServlet {
+public class deletePersonaServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,37 +36,15 @@ public class Request extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             response.setContentType("text/html;charset=UTF-8");
-            String birthday = request.getParameter("birthday");
-            String final_day = request.getParameter("final_day");
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            if(birthday.equals("") || final_day.equals("")){ 
-                request.getRequestDispatcher("Calculadora.jsp?message=1").forward(request, response);
-                return;
-            }
-            Biorritmo bio = new Biorritmo(birthday, final_day);
-            if(bio.getBirthday().getTime()>=bio.getFinal_day().getTime()){
-                request.getRequestDispatcher("Calculadora.jsp?message=2").forward(request, response);
-                return;
-            }
-            if(name.equals("") || name == ""){
-                request.getRequestDispatcher("Calculadora.jsp?message=3").forward(request, response);
-                return;
-            } 
-            if(email.equals("") || email == ""){
-                request.getRequestDispatcher("Calculadora.jsp?message=4").forward(request, response);
-                return;
-            } 
+            
+            DbHelper dbHelper = new DbHelper();
+            String name = dbHelper.deletePersonById(Integer.parseInt(request.getParameter("id")));
+            dbHelper.endConnection();
+            request.getRequestDispatcher("Calculadora.jsp?message=5&name="+name).forward(request, response);
             /*
                 NOTA
                 Cuenta continuia en deletePersonaServlet
             */
-            Person p = new Person(-1, name, email, birthday, new Biorritmo(birthday, final_day));
-            DbHelper dbHelper = new DbHelper();
-            dbHelper.insertPerson(name, email, birthday, final_day);
-            p.sendEmail();
-            dbHelper.endConnection();
-            request.getRequestDispatcher("Calculadora.jsp?message=6&email="+email).forward(request, response);
         } catch (Exception ex) {
             out.println("<!DOCTYPE html>");
             out.println("<html><h1>Ocurrio un error en el servidor: "+ex.getMessage()+"</h1></html>");

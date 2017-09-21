@@ -4,7 +4,7 @@
     Author     : Morales
 --%>
 
-<footer class="container-fluid text-center navbar navbar-fixed-bottom">
+<footer class="container-fluid text-center">
     <p><i>©2017 Los Javeros. Todos los derechos reservados.</i></p>
 </footer>
 
