@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="usr">Correo</label>
-                <input type="text" class="form-control" name="email" title="haz click para editar el correo electrónico" placeholder="correo">
+                <input type="email" class="form-control" name="email" title="haz click para editar el correo electrónico" placeholder="correo">
             </div>
             <div class="form-group">                
                 <div class="input-group input-daterange">
@@ -152,7 +152,7 @@
                             "</div>" +
                             "<div class=\"form-group\">" +
                                 "<label for=\"usr\">Correo</label>" +
-                                "<input type=\"text\" class=\"form-control\" name=\"email\" title=\"haz click para editar el correo electrónico\" placeholder=\"correo\" value=\""+person.getEmail()+"\">" +
+                                "<input type=\"email\" class=\"form-control\" name=\"email\" title=\"haz click para editar el correo electrónico\" placeholder=\"correo\" value=\""+person.getEmail()+"\">" +
                             "</div>" +
                             "<div class=\"form-group\">" +                
                                 "<div class=\"input-group input-daterange\">" +

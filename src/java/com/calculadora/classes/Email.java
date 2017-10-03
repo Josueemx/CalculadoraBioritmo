@@ -51,7 +51,7 @@ public class Email {
             }
         });
         Message message = new MimeMessage(session);
-        message.setHeader("Content-Type", "text/plain; charset=UTF-8");
+        message.setHeader("Content-Type", "text/html; charset=UTF-8");
         message.setFrom(new InternetAddress(Username, "Calculadora Bioritmo"));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
         message.setSubject("Resultados de bioritmo");
@@ -110,7 +110,7 @@ public class Email {
                 "</table>"+
                 "</body>"+
                 "</html>"
-                , "html");
+                , "text/html; charset=utf-8");
         message.saveChanges();
         Transport.send(message);
     }
