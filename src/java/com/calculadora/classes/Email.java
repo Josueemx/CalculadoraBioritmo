@@ -54,7 +54,7 @@ public class Email {
         message.setHeader("Content-Type", "text/html; charset=UTF-8");
         message.setFrom(new InternetAddress(Username, "Calculadora Bioritmo"));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
-        message.setSubject("Resultados de bioritmo");
+        message.setSubject("Cuenta de Calculadora Biorritmo");
         message.setContent(
                 "<!DOCTYPE html>" +
                 "<html>" +
@@ -66,9 +66,12 @@ public class Email {
                     "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>" +
                 "</head>" +
                 "<body>"+
-                "<center><h1>Resultados para "+person.getName()+"</h1></center>" +
+                "<h1>¡Gracias "+person.getName()+"!</h1>" +
                 "<br>"+
-                "<table class=\"table table-bordered\">" +
+                "<p>Tu cuenta se ha creado exitosamente.</p>" +
+                "<p><span style=\"font-weight: bold;\">Usuario: </span> "+person.getEmail()+"</p>" +
+                "<p><span style=\"font-weight: bold;\">Contraseña: </span> "+person.getPassword()+"</p>" +
+                /*"<table class=\"table table-bordered\">" +
                     "<tbody>" +
                         "<tr>" +
                             "<td>Cumpleaños</td>" +
@@ -107,7 +110,7 @@ public class Email {
                             "</td>" +
                         "</tr>" +
                     "</tbody>" +
-                "</table>"+
+                "</table>"+*/
                 "</body>"+
                 "</html>"
                 , "text/html; charset=utf-8");

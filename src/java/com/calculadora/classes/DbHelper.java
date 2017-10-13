@@ -41,20 +41,20 @@ public class DbHelper {
         PreparedStatement ps = conn.prepareStatement("SELECT * FROM Persona;");
         ResultSet rs = ps.executeQuery();
         while (rs.next())           
-            list.add(new Person(rs.getInt(1), rs.getString(2), rs.getString(5), rs.getString(3), new Biorritmo(rs.getString(3), rs.getString(4))));
+            list.add(new Person(rs.getInt(1), rs.getString(2), rs.getString(5), rs.getString(3), new Biorritmo(rs.getString(3), rs.getString(4)), rs.getString(6)));
         rs.close();
         return list;
     }
     
-    public void insertPerson(String nombre, String correo, String cumple, String fecha_final) throws SQLException{
+    public void insertPerson(String nombre, String correo, String cumple, String fecha_final, String contrasena) throws SQLException{
         Statement statement = conn.createStatement();
-        statement.executeUpdate("INSERT INTO Persona (nombre, email, cumple, dia_final) VALUES ('"+nombre+"','"+correo+"','"+cumple+"','"+fecha_final+"');");
+        statement.executeUpdate("INSERT INTO Persona (nombre, email, cumple, dia_final, contrasena) VALUES ('"+nombre+"','"+correo+"','"+cumple+"','"+fecha_final+"','"+contrasena+"');");
         statement.close();
     }
     
     public void insertPerson(Person person) throws SQLException{
         Statement statement = conn.createStatement();
-        statement.executeUpdate("INSERT INTO Persona (nombre, email, cumple, dia_final) VALUES ('"+person.getName()+"','"+person.getEmail()+"','"+person.getBirthday()+"','"+person.getBio().getFinal_daystr()+"');");
+        statement.executeUpdate("INSERT INTO Persona (nombre, email, cumple, dia_final, contrasena) VALUES ('"+person.getName()+"','"+person.getEmail()+"','"+person.getBirthday()+"','"+person.getBio().getFinal_daystr()+"','"+person.getPassword()+"');");
         statement.close();
     }
     
@@ -68,17 +68,18 @@ public class DbHelper {
         return name;
     }
     
-    public Person updatePersonById(int Id, String nombre, String correo, String cumple, String fecha_final) throws SQLException{
-        Person p = new Person(Id, nombre, correo, cumple, new Biorritmo(cumple, fecha_final));
+    public Person updatePersonById(int Id, String nombre, String correo, String cumple, String fecha_final, String contrasena) throws SQLException{
+        Person p = new Person(Id, nombre, correo, cumple, new Biorritmo(cumple, fecha_final), contrasena);
         Statement statement = conn.createStatement();
         PreparedStatement preparedStmt = conn.prepareStatement("UPDATE Persona "
-                                                            +  "SET nombre = ?, cumple = ?, dia_final = ?, email = ?"
+                                                            +  "SET nombre = ?, cumple = ?, dia_final = ?, email = ?, contrasena = ?"
                                                             +  "WHERE id = ?;");
         preparedStmt.setString(1, nombre);
         preparedStmt.setString(2, cumple);
         preparedStmt.setString(3, fecha_final);
         preparedStmt.setString(4, correo);
-        preparedStmt.setInt(5, Id);
+        preparedStmt.setString(5, contrasena);
+        preparedStmt.setInt(6, Id);
         preparedStmt.execute();
         statement.close();
         return p;
@@ -90,12 +91,33 @@ public class DbHelper {
         ResultSet rs = ps.executeQuery();
         Person p;
         if(rs.next())
-            p = new Person(rs.getInt(1), rs.getString(2), rs.getString(5), rs.getString(3), new Biorritmo(rs.getString(3), rs.getString(4)));
+            p = new Person(rs.getInt(1), rs.getString(2), rs.getString(5), rs.getString(3), new Biorritmo(rs.getString(3), rs.getString(4)), rs.getString(6));
         else
             p = new Person();
         rs.close();
         return p;
     }
+    
+    public Person getPersonByEmail(String email) throws SQLException{
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Persona where email = ?;");
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        Person p;
+        if(rs.next())
+            p = new Person(rs.getInt(1), rs.getString(2), rs.getString(5), rs.getString(3), new Biorritmo(rs.getString(3), rs.getString(4)), rs.getString(6));
+        else
+            p = new Person();
+        rs.close();
+        return p;
+    }
+    
+    public boolean emailExists(String email) throws SQLException{
+        Person p = getPersonByEmail(email);
+        if(p.getEmail()==null||p.getEmail().equals("null"))
+            return false;
+        else
+            return true;     
+    } 
     
     
     public void endConnection() throws SQLException{

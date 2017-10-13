@@ -5,7 +5,6 @@
  */
 package com.calculadora.servlets;
 
-import com.calculadora.classes.Biorritmo;
 import com.calculadora.classes.DbHelper;
 import com.calculadora.classes.Person;
 import java.io.IOException;
@@ -17,12 +16,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.jboss.weld.servlet.SessionHolder;
 
 /**
  *
  * @author Morales
  */
-public class Request extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,65 +34,46 @@ public class Request extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
+    /*
+    PrintWriter out = response.getWriter()
+    out.println("<!DOCTYPE html>");
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try {
-            response.setContentType("text/html;charset=UTF-8");
-            String birthday = request.getParameter("birthday");
-            String final_day = request.getParameter("final_day");
-            String name = request.getParameter("name");
+        HttpSession session = request.getSession();    
+        session.setAttribute("logged_in", "false");
+        try {    
             String email = request.getParameter("email");
             String password = request.getParameter("contrasena");
-            String c_password = request.getParameter("c-contrasena");
-            if(birthday.equals("") || final_day.equals("")){ 
-                request.getRequestDispatcher("Login.jsp?message=1").forward(request, response);
-                return;
-            }
-            Biorritmo bio = new Biorritmo(birthday, final_day);
-            if(bio.getBirthday().getTime()>=bio.getFinal_day().getTime()){
-                request.getRequestDispatcher("Login.jsp?message=2").forward(request, response);
-                return;
-            }
-            if(name.equals("") || name == ""){
-                request.getRequestDispatcher("Login.jsp?message=3").forward(request, response);
-                return;
-            } 
-            if(email.equals("") || email == ""){
-                request.getRequestDispatcher("Login.jsp?message=4").forward(request, response);
-                return;
-            } 
-            /*
-                NOTA
-                Cuenta continuia en deletePersonaServlet
-            */
-            if(password.equals("") || password == ""){
-                request.getRequestDispatcher("Login.jsp?message=7").forward(request, response);
-                return;
-            }
-            if(!password.equals(c_password)){
-                request.getRequestDispatcher("Login.jsp?message=8").forward(request, response);
+            if(password.equals("") || password == "" || email.equals("") || email == ""){
+                request.getRequestDispatcher("Login.jsp?message=10").forward(request, response);
                 return;
             }
             DbHelper dbHelper = new DbHelper();
-            if(dbHelper.emailExists(email)){
-                request.getRequestDispatcher("Login.jsp?message=9").forward(request, response);
+            if(!dbHelper.emailExists(email)){
+                dbHelper.endConnection();
+                request.getRequestDispatcher("Login.jsp?message=11").forward(request, response);
                 return;
             }
-            /*
-                NOTA
-                Cuenta continuia en LoginServlet
-            */
-            Person p = new Person(-1, name, email, birthday, new Biorritmo(birthday, final_day), password);
-            dbHelper.insertPerson(name, email, birthday, final_day, password);
-            p.sendEmail();
-            dbHelper.endConnection();
-            request.getRequestDispatcher("Login.jsp?message=6&email="+email).forward(request, response);
-        } catch (Exception ex) {
+            Person p = dbHelper.getPersonByEmail(email);
+            if(!password.equals(p.getPassword())){
+                dbHelper.endConnection();
+                request.getRequestDispatcher("Login.jsp?message=12").forward(request, response);
+                return;
+            }
+            session.setAttribute("logged_in", "true");
+            session.setAttribute("person", p);
+            request.getRequestDispatcher("Calculadora.jsp").forward(request, response);
+        } 
+        catch (Exception ex) {
             out.println("<!DOCTYPE html>");
             out.println("<html><h1>Ocurrio un error en el servidor: "+ex.getMessage()+"</h1></html>");
             Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

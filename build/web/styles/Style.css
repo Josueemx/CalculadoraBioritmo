@@ -202,3 +202,15 @@ footer {
 	background-color: #1CA347;
 	border-color: #1CA347;
 }
+
+.panel-padding-top {
+    padding-top: 130px;
+}
+
+.panel-padding-bottom-first {
+    padding-bottom: 30.8vh;
+}
+
+.panel-padding-bottom-second {
+    padding-bottom: 5vh;
+}

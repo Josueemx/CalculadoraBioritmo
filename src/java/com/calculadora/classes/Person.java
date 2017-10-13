@@ -17,17 +17,19 @@ public class Person {
     private int ID;
     private String Name;
     private String Email;
+    private String Password;
     private String Birthday;
     private Biorritmo Bio;
     
     public Person(){}
     
-    public Person(int ID, String Name, String Email, String Birthday, Biorritmo Bio) {
+    public Person(int ID, String Name, String Email, String Birthday, Biorritmo Bio, String Password) {
         this.ID = ID;
         this.Name = Name;
         this.Birthday = Birthday;
         this.Bio = Bio;
         this.Email = Email;
+        this.Password = Password;
     }
      
     public void sendEmail() throws MessagingException, UnsupportedEncodingException{
@@ -57,6 +59,14 @@ public class Person {
 
     public void setName(String Name) {
         this.Name = Name;
+    }
+    
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
     }
 
     public String getBirthday() {

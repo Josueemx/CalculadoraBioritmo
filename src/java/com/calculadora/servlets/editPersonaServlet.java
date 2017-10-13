@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -41,7 +42,12 @@ public class editPersonaServlet extends HttpServlet {
             String final_day = request.getParameter("final_day");
             String name = request.getParameter("name");
             String email = request.getParameter("email");
+            String password = request.getParameter("contrasena");
+            String n_password = request.getParameter("n-contrasena");
+            String c_password = request.getParameter("c-contrasena");
+            String send_email = request.getParameter("send_email")==null? "false": "true";
             int id = Integer.parseInt(request.getParameter("id"));
+            
             if(birthday.equals("") || final_day.equals("")){ 
                 request.getRequestDispatcher("Calculadora.jsp?message=1").forward(request, response);
                 return;
@@ -52,18 +58,52 @@ public class editPersonaServlet extends HttpServlet {
                 return;
             }
             if(name.equals("") || name == ""){
-                request.getRequestDispatcher("Calculadora.jsp?message=3").forward(request, response);
+                request.getRequestDispatcher("Calculadora.jsp?message=3%").forward(request, response);
                 return;
             } 
             if(email.equals("") || email == ""){
                 request.getRequestDispatcher("Calculadora.jsp?message=4").forward(request, response);
                 return;
             } 
+            /*
+                NOTA
+                Cuenta continua en deletePersonaServlet
+            */
+            if(password.equals("") || password == ""){
+                request.getRequestDispatcher("Calculadora.jsp?message=7").forward(request, response);
+                return;
+            }
+            if(n_password.equals("") || n_password == ""){
+                request.getRequestDispatcher("Calculadora.jsp?message=14").forward(request, response);
+                return;
+            }
+            if(!n_password.equals(c_password)){
+                request.getRequestDispatcher("Calculadora.jsp?message=8").forward(request, response);
+                return;
+            }
+            HttpSession session = request.getSession();   
+            Person p_s = (Person) session.getAttribute("person");
             DbHelper dbHelper = new DbHelper();
-            Person p = dbHelper.updatePersonById(id, name, email, birthday, final_day);
-            p.sendEmail();
+            if(dbHelper.emailExists(email)){
+                if(!p_s.getEmail().equals(email)){
+                    request.getRequestDispatcher("Calculadora.jsp?message=9").forward(request, response);
+                    return;
+                }
+            }
+            if(!p_s.getPassword().equals(password)){
+                request.getRequestDispatcher("Calculadora.jsp?message=12").forward(request, response);
+                return;
+            }
+            Person p = dbHelper.updatePersonById(id, name, email, birthday, final_day, n_password);
+            session.setAttribute("person", p);
+            if(Boolean.parseBoolean(send_email)){
+                p.sendEmail();
+                request.getRequestDispatcher("Calculadora.jsp?message=6&email="+email).forward(request, response);
+            }
+            else{
+                request.getRequestDispatcher("Calculadora.jsp?message=15").forward(request, response);
+            }
             dbHelper.endConnection();
-            request.getRequestDispatcher("Calculadora.jsp?message=6&email="+email).forward(request, response);
         } catch (Exception ex) {
             out.println("<!DOCTYPE html>");
             out.println("<html><h1>Ocurrio un error en el servidor: "+ex.getMessage()+"</h1></html>");
