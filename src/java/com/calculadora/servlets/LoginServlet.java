@@ -66,6 +66,8 @@ public class LoginServlet extends HttpServlet {
             }
             session.setAttribute("logged_in", "true");
             session.setAttribute("person", p);
+            session.setAttribute("person_id", p.getID()+"");
+            dbHelper.endConnection();
             request.getRequestDispatcher("Calculadora.jsp").forward(request, response);
         } 
         catch (Exception ex) {

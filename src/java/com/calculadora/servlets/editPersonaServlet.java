@@ -8,8 +8,11 @@ package com.calculadora.servlets;
 import com.calculadora.classes.Person;
 import com.calculadora.classes.Biorritmo;
 import com.calculadora.classes.DbHelper;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -35,9 +38,10 @@ public class editPersonaServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            response.setContentType("text/html;charset=UTF-8");
             String birthday = request.getParameter("birthday");
             String final_day = request.getParameter("final_day");
             String name = request.getParameter("name");
@@ -96,6 +100,10 @@ public class editPersonaServlet extends HttpServlet {
             }
             Person p = dbHelper.updatePersonById(id, name, email, birthday, final_day, n_password);
             session.setAttribute("person", p);
+            session.setAttribute("logged_in", "true");
+            session.setAttribute("person_id", p.getID()+"");
+            //out.write(p.toJSON());
+            //aqui ver que pasa con los redirect
             if(Boolean.parseBoolean(send_email)){
                 p.sendEmail();
                 request.getRequestDispatcher("Calculadora.jsp?message=6&email="+email).forward(request, response);
@@ -108,7 +116,9 @@ public class editPersonaServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html><h1>Ocurrio un error en el servidor: "+ex.getMessage()+"</h1></html>");
             Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }  finally{
+            out.close();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

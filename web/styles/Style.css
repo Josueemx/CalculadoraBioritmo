@@ -99,6 +99,18 @@ footer {
     cursor: pointer;
 }
 
+.green{
+    background: green;
+}
+
+.red{
+    background: red;
+}
+
+.yellow{
+    background: yellow;
+}
+
 /*
 ====================================
                 Login

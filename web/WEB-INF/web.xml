@@ -20,6 +20,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.calculadora.servlets.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdatePersonaServlet</servlet-name>
+        <servlet-class>com.calculadora.servlets.UpdatePersonaServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Request</servlet-name>
         <url-pattern>/Request</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePersonaServlet</servlet-name>
+        <url-pattern>/UpdatePersonaServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,7 +5,10 @@
  */
 package com.calculadora.classes;
 
+import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.mail.MessagingException;
 
 /**
@@ -83,5 +86,24 @@ public class Person {
 
     public void setBio(Biorritmo Bio) {
         this.Bio = Bio;
+    }
+    
+    public String toJSON(){
+        String json = "";
+        Map person = new HashMap();
+        person.put("ID", ID);
+        person.put("Name", Name);
+        person.put("Email", Email);
+        person.put("Password", Password);
+        person.put("Birthday", Birthday);
+        person.put("Final_day", Bio.getFinal_daystr());
+        person.put("days",Bio.getDays());
+        person.put("physicalcycle",Bio.getPhysicalCycle());
+        person.put("emotionalcycle",Bio.getEmotionalCycle());
+        person.put("intelectualcycle",Bio.getIntelectualCycle());
+        person.put("physicalcolor",Bio.getPhysicalColor());
+        person.put("emotionalcolor",Bio.getEmotionalColor());
+        person.put("intelecualcolor",Bio.getIntelectualColor());
+        return new Gson().toJson(person);
     }
 }
